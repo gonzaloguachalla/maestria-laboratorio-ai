@@ -1,0 +1,183 @@
+
+==============================================================================
+1. CARGA DE DATOS
+==============================================================================
+Archivo: Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv  ->  225,745 filas x 79 columnas
+
+==============================================================================
+2. ESTRUCTURA DEL DATASET
+==============================================================================
+Filas: 225,745   Columnas: 79 (incluye Label; sin contar es_ataque)
+Memoria aproximada: 146 MB
+Tipos de dato:
+   int64      55 columnas
+   float64    24 columnas
+   str        1 columnas
+Columnas con nombre repetido en el CSV (pandas las renombró): ['Fwd Header Length.1']
+   -> son copias de otra columna; conviene eliminarlas.
+
+==============================================================================
+3. DISTRIBUCIÓN DE CLASES
+==============================================================================
+         filas  porcentaje
+Label                     
+DDoS    128027      56.713
+BENIGN   97718      43.287
+
+Benigno: 97,718 (43.29 %)   Ataque: 128,027 (56.71 %)
+Razón clase mayoritaria / minoritaria: 1.3 a 1
+
+==============================================================================
+4. CALIDAD DEL DATO (antes de limpiar)
+==============================================================================
+Valores faltantes (NaN): 4 en 1 columnas
+   Flow Bytes/s                                 4
+Valores infinitos (inf): 64 en 2 columnas
+   Flow Packets/s                              34
+   Flow Bytes/s                                30
+Columnas con valores negativos: 9
+   Init_Win_bytes_backward                 88,299 filas negativas
+   Init_Win_bytes_forward                  32,925 filas negativas
+   Flow IAT Min                               108 filas negativas
+   Fwd IAT Min                                  6 filas negativas
+   Flow Duration                                2 filas negativas
+   Flow Bytes/s                                 2 filas negativas
+   Flow Packets/s                               2 filas negativas
+   Flow IAT Mean                                2 filas negativas
+   Flow IAT Max                                 2 filas negativas
+Flujos con 'Flow Duration' = 0: 34  (dividir por duración cero produce inf / NaN en las tasas por segundo)
+Columnas constantes (un solo valor): 10
+   Bwd PSH Flags
+   Fwd URG Flags
+   Bwd URG Flags
+   CWE Flag Count
+   Fwd Avg Bytes/Bulk
+   Fwd Avg Packets/Bulk
+   Fwd Avg Bulk Rate
+   Bwd Avg Bytes/Bulk
+   Bwd Avg Packets/Bulk
+   Bwd Avg Bulk Rate
+
+==============================================================================
+5. LIMPIEZA
+==============================================================================
+Filas iniciales:                   225,745
+Tras quitar inf/NaN:               225,711   (se eliminaron 34)
+Tras quitar duplicados:            223,082   (se eliminaron 2,629)
+Filas conservadas: 98.82 %
+Filas eliminadas por clase (inf/NaN + duplicados):
+   DDoS                 128,027 ->   128,014   (13 eliminadas)
+   BENIGN                97,718 ->    95,068   (2,650 eliminadas)
+Proporción de ataques ANTES : 56.713 %
+Proporción de ataques DESPUÉS: 57.384 %
+
+==============================================================================
+RESUMEN DE VARIABLES PARA MODELAR
+==============================================================================
+Variables numéricas: 78   constantes (se omiten en el análisis): 10   usadas: 68
+
+==============================================================================
+6. COMPARACIÓN ENTRE CLASES
+==============================================================================
+Mediana y media por clase (0 = benigno, 1 = ataque):
+                                        benigno       ataque
+Flow Duration               median    217393.50   1879121.50
+                            mean    15732897.06  16957157.95
+Total Fwd Packets           median         2.00         4.00
+                            mean           5.49         4.47
+Total Length of Fwd Packets median        70.00        26.00
+                            mean        2185.76        31.91
+Flow Bytes/s                median      1796.57       160.10
+                            mean     1215413.30     60509.89
+Flow Packets/s              median        21.88         2.59
+                            mean       30034.21       155.39
+Packet Length Mean          median        61.78       833.50
+                            mean         229.37       736.95
+
+Variedad: cantidad de valores DISTINTOS por clase (un ataque automatizado suele ser uniforme):
+                             benigno  ataque
+Flow Duration                  66113  124632
+Total Fwd Packets                297      11
+Total Length of Fwd Packets     3829      16
+Flow Bytes/s                   76386  126233
+Flow Packets/s                 68552  126618
+Packet Length Mean             11654      66
+
+(Para los pasos 7, 8 y 10 se usa una muestra de 20,000 filas, balanceada por clase)
+
+==============================================================================
+7. CORRELACIONES ENTRE VARIABLES
+==============================================================================
+Pares de variables con |r| >= 0.95: 55 de 4,624 posibles
+   Total Length of Bwd Packets      Subflow Bwd Bytes                r = +1.000
+   Total Fwd Packets                Subflow Fwd Packets              r = +1.000
+   Fwd PSH Flags                    SYN Flag Count                   r = +1.000
+   Fwd Header Length                Fwd Header Length.1              r = +1.000
+   Bwd Packet Length Mean           Avg Bwd Segment Size             r = +1.000
+   RST Flag Count                   ECE Flag Count                   r = +1.000
+   Total Backward Packets           Subflow Bwd Packets              r = +1.000
+   Fwd Packet Length Mean           Avg Fwd Segment Size             r = +1.000
+   Total Length of Fwd Packets      Subflow Fwd Bytes                r = +1.000
+   Packet Length Mean               Average Packet Size              r = +0.999
+   Flow Duration                    Fwd IAT Total                    r = +0.997
+   Flow IAT Max                     Idle Max                         r = +0.997
+   Flow IAT Max                     Fwd IAT Max                      r = +0.995
+   Bwd Packet Length Max            Bwd Packet Length Std            r = +0.993
+   Active Mean                      Active Min                       r = +0.992
+   ... y 40 pares más
+Interpretación: variables casi idénticas aportan información redundante.
+
+==============================================================================
+8. PODER SEPARADOR UNIVARIADO (AUC)
+==============================================================================
+AUC de cada variable por sí sola (0,5 = nada; 1,0 = separa perfectamente):
+   Bwd Packet Length Min               0.796
+   Bwd Packet Length Std               0.751
+   Fwd IAT Std                         0.751
+   Fwd Packet Length Max               0.749
+   Avg Fwd Segment Size                0.747
+   Fwd Packet Length Mean              0.747
+   Init_Win_bytes_forward              0.742
+   act_data_pkt_fwd                    0.735
+   Fwd IAT Max                         0.734
+   Fwd IAT Mean                        0.733
+   Fwd IAT Total                       0.725
+   Subflow Fwd Packets                 0.703
+   Total Fwd Packets                   0.703
+   Fwd Packet Length Min               0.694
+   Total Length of Fwd Packets         0.688
+
+==============================================================================
+9. PUERTOS DE DESTINO POR CLASE
+==============================================================================
+Los 10 puertos más frecuentes y qué % de cada clase representan:
+                  % de los benignos  % de los ataques
+Destination Port                                     
+21                             0.15               0.0
+22                             0.33               0.0
+53                            31.87               0.0
+80                             8.99             100.0
+88                             0.18               0.0
+123                            0.38               0.0
+137                            0.14               0.0
+389                            0.27               0.0
+443                           13.79               0.0
+8080                           0.54               0.0
+
+Regla de UNA sola condición: 'Destination Port == 80' -> ataque
+   TP=128,011  FP=8,546  FN=3  TN=86,522
+   recall=1.0000  precisión=0.9374  exactitud=0.9617
+Nota: el AUC de la sección 8 no detecta este tipo de atajo, porque el número de
+puerto no crece ni decrece de forma regular con el ataque (no es monótono).
+Pregunta clave: ¿el puerto describe el ataque o solo cómo se montó el laboratorio?
+
+==============================================================================
+10. PROYECCIÓN PCA (2 componentes)
+==============================================================================
+Varianza explicada: PC1 = 32.1 %, PC2 = 20.5 %  (total 52.6 %)
+Si las clases forman nubes bien separadas, el problema será 'fácil' para casi cualquier modelo.
+
+==============================================================================
+11. SALIDAS
+==============================================================================
+Dataset limpio guardado en: eda_salida/cic_limpio.parquet

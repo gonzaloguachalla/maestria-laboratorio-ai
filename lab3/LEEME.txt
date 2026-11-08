@@ -1,0 +1,57 @@
+PRÁCTICA 3 — Reglas, árbol y SVM: precisión, recall y umbral
+=============================================================
+Inteligencia Artificial orientada a Seguridad Informática · Clase 3
+
+QUÉ HAY EN ESTA CARPETA
+  guia_estudiante_practica_3.docx   Guía completa: pasos, preguntas, tablas y entregable
+  preparar_datos.py                 Limpia los CSV originales (se ejecuta una vez; no modificar)
+  p3_utils.py                       Utilidades y todos los gráficos (no modificar)
+  practica3_plantilla.py            TU ARCHIVO DE TRABAJO: completa los 6 TODO
+  requerimientos.txt                  Librerías necesarias
+  datos_originales/                 Aquí copias los CSV
+  datos_limpios/                    Se llena solo (preparar_datos.py)
+  figuras/                          Se llena solo (gráficos PNG y tablas CSV)
+
+ARCHIVOS DEL DATASET QUE SE USAN (carpeta MachineLearningCVE de CIC-IDS2017)
+  Thursday-WorkingHours-Morning-WebAttacks.pcap_ISCX.csv    OBLIGATORIO  (práctica principal)
+  Friday-WorkingHours-Morning.pcap_ISCX.csv                 OBLIGATORIO  (extensión: botnet)
+  Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv          OPCIONAL     (contraste)
+  Los nombres deben ser EXACTOS. No uses la carpeta TrafficLabelling.
+
+PREPARACIÓN (una sola vez)
+  1. Descomprime este paquete en una ruta SIN espacios con tu nombre y apellido (por ejemplo C:\juan_perez).
+  2. Copia los CSV indicados dentro de datos_originales/
+     (o usa:  python preparar_datos.py --entrada "RUTA\MachineLearningCVE" ).
+  3. Instala las librerías:
+         pip install -r requerimientos.txt
+  4. Abre una terminal en esta carpeta y ejecuta la limpieza:
+         python preparar_datos.py
+     Debe terminar con "Listo" y crear web_limpio.csv.gz y bot_limpio.csv.gz en datos_limpios/.
+     Cifras de control: web = 164.179 filas y 2.143 ataques; bot = 184.044 filas y 1.948 ataques.
+
+TRABAJO
+  5. Ejecuta la plantilla sin tocar nada (verás mensajes [PENDIENTE]):
+         python practica3_plantilla.py --dataset web
+  6. Completa, en orden, los 6 TODO de practica3_plantilla.py:
+         metricas · evaluar_regla_puerto · entrenar_arbol · reglas_texto · barrido_umbral · elegir_umbral
+     Después de cada TODO vuelve a ejecutar y revisa los resultados y la carpeta figuras/.
+  7. Extensión (botnet):            python practica3_plantilla.py --dataset bot
+  8. Opcional A (prevalencia):      python practica3_plantilla.py --dataset web --prevalencia
+  9. Opcional B (contraste DDoS):   python practica3_plantilla.py --dataset ddos
+
+ENTREGABLE (UN SOLO ZIP: apellido_nombre_practica3.zip)
+  Contenido del zip: tu carpeta practica3/ con
+      practica3_plantilla.py    terminado (los 6 TODO resueltos)
+      p3_utils.py               sin modificar
+      informe_practica3.docx    respuestas P1 a P25 y P28 escritas como "P1. ...", tablas A a D completas
+                                y al menos cinco gráficos comentados
+      figuras/                  PNG y CSV generados por tu script, de web y de bot
+  Antes de comprimir: ejecuta la plantilla para web y para bot, y VACÍA datos_originales/ y datos_limpios/
+  (son muy grandes y no se entregan).
+  IMPORTANTE: no cambies los nombres de archivos ni de funciones.
+  Detalle completo en la guía (sección 9).
+
+SI ALGO FALLA
+  - Ruta con espacios: escríbela entre comillas dobles.
+  - "NO ENCONTRADO" al limpiar: revisa los nombres exactos de los CSV y la carpeta MachineLearningCVE.
+  - Más ayuda: sección «Problemas frecuentes» de la guía.

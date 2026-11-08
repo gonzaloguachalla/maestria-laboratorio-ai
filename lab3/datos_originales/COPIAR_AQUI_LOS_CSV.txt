@@ -1,0 +1,5 @@
+Copia en esta carpeta, desde MachineLearningCVE, con estos nombres exactos:
+
+  Thursday-WorkingHours-Morning-WebAttacks.pcap_ISCX.csv     (obligatorio)
+  Friday-WorkingHours-Morning.pcap_ISCX.csv                  (obligatorio)
+  Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv           (opcional)

@@ -1,0 +1,1 @@
+Esta carpeta la llena practica3_plantilla.py (gráficos PNG y tablas CSV).

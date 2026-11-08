@@ -1,0 +1,10 @@
+# Entornos virtuales
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# Datasets grandes (CIC-IDS-2017) y datos derivados
+*.pcap_ISCX.csv
+CIC-IDS-2017/
+*.parquet
