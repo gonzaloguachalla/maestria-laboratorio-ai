@@ -1,10 +1,27 @@
-# Entornos virtuales
+# --- Entornos virtuales y caché de Python ---
 venv/
 .venv/
 __pycache__/
 *.pyc
+.ipynb_checkpoints/
 
-# Datasets grandes (CIC-IDS-2017) y datos derivados
-*.pcap_ISCX.csv
+# --- Datasets grandes (CIC-IDS-2017): se descargan aparte ---
 CIC-IDS-2017/
+*.pcap_ISCX.csv
+
+# --- Datos derivados / regenerables ---
 *.parquet
+lab3/datos_limpios/*.csv.gz
+lab3/datos_originales/*.csv
+
+# --- Duplicados ---
+lab1/lab1.zip
+
+# --- Editor y sistema ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# --- Secretos ---
+.env
